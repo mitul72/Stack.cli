@@ -19,12 +19,15 @@ def choose_question_list(questions: list[Question]) -> Question:
     print("Select a question list: ")
 
     num_keys = list(f"'{i}'" for i in range(0, 10))
+    num_keys.append("'q'")
     for i in range(len(questions[:10])):
         print(f"Type {i} to fetch: {questions[i].title}")
 
     key = _wait_for_keypress(*num_keys)
-    user_input = int(str(key).replace("'", ''))
+    if key == "'q'":
+        sys.exit()
 
+    user_input = int(str(key).replace("'", ''))
     question = questions[user_input-1]
     return question
 
