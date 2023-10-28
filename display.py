@@ -1,46 +1,18 @@
-import dataclasses
 from bs4 import BeautifulSoup
-from typing import Optional
 from pygments import highlight
 from pygments.lexers import PythonLexer
 from pygments.formatters import TerminalFormatter
 
+from models import Question, QuestionAnswer
 
 
-@dataclasses.dataclass
-class Question:
-    question_id: int
-    title: str
-    short_description: Optional[str]
-
-
-@dataclasses.dataclass
-class QuestionAnswer:
-    username: str
-    user_points: int
-    up_votes: int
-    body_html: str
-    accepted: bool
-
-
-def get_question_answers(question: Question) -> list[QuestionAnswer]:
-    # TODO: Josh
-    ...
-
-
-def get_search_results(term: str, site='stackoverflow.com') -> list[Question]:
-    # TODO: Robert
-    ...
-
-def choose_question_list(questions: list[Question]):
+def choose_question_list(questions: list[Question]) -> Question:
     # TODO: Mitul
 
     user_input = 0
     value_is_valid = True
 
     print("Select a question list: ")
-
-
 
     while value_is_valid:
         for i in range(len(questions)):
@@ -62,6 +34,7 @@ def choose_question_list(questions: list[Question]):
     question = questions[user_input-1]
     return question
 
+
 def display_answers(question: Question, answers: list[QuestionAnswer]):
     # TODO: Mitul
     print(f"Question: {question.title}\n")
@@ -69,9 +42,6 @@ def display_answers(question: Question, answers: list[QuestionAnswer]):
     for idx, answer in enumerate(answers, 1):
         print(f"{'-'*50}")
         print(f"\nSolution {idx}:")
-        # html_filter = HTMLFilter()
-        # html_filter.feed(answer.body_html)
-        # print(html_filter.text)
         soup = BeautifulSoup(answer.body_html, 'html.parser')
         # Find all code blocks
 
@@ -83,10 +53,7 @@ def display_answers(question: Question, answers: list[QuestionAnswer]):
             code = code_block.get_text()
             # print(code)
             try:
-                # lexer = get_lexer_by_name(code_block, stripall=True)
-                # formatter = HtmlFormatter(style='colorful')
                 highlighted_code = highlight(code, PythonLexer(), TerminalFormatter())
-                # print(highlighted_code)
                 code_block.replace_with(BeautifulSoup(highlighted_code, 'html.parser'))
             except Exception:
                 pass
@@ -94,6 +61,6 @@ def display_answers(question: Question, answers: list[QuestionAnswer]):
         modified_html = str(soup.get_text())
         print(modified_html)
 
-        # print(soup.get_text())
         print('-'*50)
 
+    input('Press enter to choose another question')

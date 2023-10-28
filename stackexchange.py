@@ -3,7 +3,7 @@ from typing import Optional
 
 from stackapi import StackAPI
 
-from stub import Question, QuestionAnswer
+from models import Question, QuestionAnswer
 
 
 def get_question_answers(question: Question) -> list[QuestionAnswer]:
@@ -40,18 +40,3 @@ def get_question_answers(question: Question) -> list[QuestionAnswer]:
     sorted_question_answers = sorted(question_answers, key=lambda x: (x.accepted, x.up_votes), reverse=True)
 
     return sorted_question_answers
-
-
-question = Question(question_id=56758333, title="Error 429 with simple query on google with requests python",
-                    short_description="This is a sample description.")
-
-question_answers = get_question_answers(question)
-
-for question_answer in question_answers:
-    print("Username:", question_answer.username)
-    print("Accepted:", question_answer.accepted)
-    print("User Points:", question_answer.user_points)
-    print("Up Votes:", question_answer.up_votes)
-    # print("Body HTML:", question_answer.body_html)
-    print("---------------------------")
-

@@ -7,7 +7,7 @@ import requests
 import fake_useragent
 from bs4 import BeautifulSoup
 
-from stub import Question
+from models import Question
 
 
 QUESTION_ID_REGEX = re.compile(r'questions/(\d+)/')
