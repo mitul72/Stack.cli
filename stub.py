@@ -21,6 +21,7 @@ class QuestionAnswer:
     user_points: int
     up_votes: int
     body_html: str
+    accepted: bool
 
 
 def get_question_answers(question: Question) -> list[QuestionAnswer]:
