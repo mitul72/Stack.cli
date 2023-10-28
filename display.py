@@ -1,7 +1,11 @@
+import os
+import sys
+
 from bs4 import BeautifulSoup
 from pygments import highlight
 from pygments.lexers import PythonLexer
 from pygments.formatters import TerminalFormatter
+from pynput.keyboard import Key, Listener
 
 from models import Question, QuestionAnswer
 
@@ -39,7 +43,13 @@ def display_answers(question: Question, answers: list[QuestionAnswer]):
     # TODO: Mitul
     print(f"Question: {question.title}\n")
     print("Below are the expert-contributed solutions:\n")
-    for idx, answer in enumerate(answers, 1):
+
+    index = 0
+
+    while True:
+        answer = answers[index]
+        idx = index + 1
+
         print(f"{'-'*50}")
         print(f"\nSolution {idx}:")
         soup = BeautifulSoup(answer.body_html, 'html.parser')
@@ -61,6 +71,42 @@ def display_answers(question: Question, answers: list[QuestionAnswer]):
         modified_html = str(soup.get_text())
         print(modified_html)
 
-        print('-'*50)
+        print('-'*5)
+
+        key = _wait_for_keypress('Key.left', 'Key.right', "'q'")
+        if key == 'Key.left':
+            index -= 1
+            if index < 0:
+                index = len(answers) - 1
+        if key == 'Key.right':
+            index += 1
+            if index >= len(answers):
+                index = 0
+        if key == "'q'":
+            return
+        clear_screen()
 
     input('Press enter to choose another question')
+
+
+
+def _wait_for_keypress(*keys):
+    pressed_key = [None]
+
+    def on_press(key):
+        if str(key) in keys:
+            pressed_key[0] = str(key)
+            return False
+
+    with Listener(on_press=on_press) as listener:
+        listener.join()
+
+    return pressed_key[0]
+
+def clear_screen():
+    if sys.platform == 'win32':
+        cmd = 'cls'
+    else:
+        cmd = 'clear'
+
+    os.system(cmd)
