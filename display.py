@@ -18,22 +18,12 @@ def choose_question_list(questions: list[Question]) -> Question:
 
     print("Select a question list: ")
 
-    while value_is_valid:
-        for i in range(len(questions)):
-            try:
-                print(f"Type {i + 1} to fetch: {questions[i].title}")
-            except Exception:
-                ...
+    num_keys = list(f"'{i}'" for i in range(0, 10))
+    for i in range(len(questions[:10])):
+        print(f"Type {i} to fetch: {questions[i].title}")
 
-        try:
-            user_input = int(input("Select question number: "))
-            if user_input > len(questions) or 0 >= user_input:
-                raise ValueError("Please enter a valid number")
-            else:
-                value_is_valid = False
-
-        except ValueError as e:
-            print("Please enter a valid number")
+    key = _wait_for_keypress(*num_keys)
+    user_input = int(str(key).replace("'", ''))
 
     question = questions[user_input-1]
     return question
@@ -102,6 +92,7 @@ def _wait_for_keypress(*keys):
         listener.join()
 
     return pressed_key[0]
+
 
 def clear_screen():
     if sys.platform == 'win32':

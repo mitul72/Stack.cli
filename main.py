@@ -32,9 +32,9 @@ def main():
     while True:
         display.clear_screen()
         question = display.choose_question_list(questions)
+        display.clear_screen()
         answers = stackexchange.get_question_answers(question)
 
-        display.clear_screen()
         display.display_answers(question, answers)
 
 
