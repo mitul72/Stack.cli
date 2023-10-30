@@ -5,7 +5,7 @@ from bs4 import BeautifulSoup
 from rich.console import Console
 from rich.syntax import Syntax
 from pygments.lexers import guess_lexer, PythonLexer
-from pynput.keyboard import Key, Listener
+from pynput.keyboard import Key, Listener, Controller
 from itertools import zip_longest
 
 
@@ -59,10 +59,7 @@ def display_answers(question: Question, answers: list[QuestionAnswer]):
             for code_block in code_blocks:
 
                 code = code_block.get_text()
-                # guessLexer = guess_lexer(code)
-                # detected_lexer = guessLexer if guessLexer.name != "Text only" else PythonLexer()
                 try:
-                    # highlighted_code = highlight(code, detected_lexer, Terminal256Formatter(style="monokai"))
                     code_block.replace_with(BeautifulSoup("\x1b[48;5;235m" + code + "\x1b[0m", 'html.parser'))
                 except Exception:
                     pass
@@ -106,8 +103,12 @@ def display_answers(question: Question, answers: list[QuestionAnswer]):
 
 def _wait_for_keypress(*keys):
     pressed_key = [None]
-
+    keyboard = Controller()
     def on_press(key):
+        # Clear input
+        keyboard.press(Key.backspace)
+        keyboard.release(Key.backspace)
+
         if str(key) in keys:
             pressed_key[0] = str(key)
             return False
