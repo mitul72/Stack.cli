@@ -11,6 +11,8 @@
 - [License](#license)
 
 
+![Stacksly logo](./images/StackCLI.png)
+
 ---
 
 ## Introduction

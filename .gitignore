@@ -4,3 +4,10 @@ venv/
 *.log
 __pycache__/
 .lastGoogleRequest
+.google-cookie
+build/
+dist/
+main.spec
+setup.py
+test.py
+cxfreeze-dist/
