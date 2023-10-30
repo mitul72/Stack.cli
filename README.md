@@ -1,5 +1,7 @@
 # Stack.Cli (Stacksly)
 
+![Stacksly logo](./images/StackCLI.png)
+
 # Table of Contents
 
 - [Introduction](#introduction)
@@ -11,7 +13,6 @@
 - [License](#license)
 
 
-![Stacksly logo](./images/StackCLI.png)
 
 ---
 
