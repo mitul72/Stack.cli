@@ -48,7 +48,7 @@ def display_answers(question: Question, answers: list[QuestionAnswer]):
         soup = BeautifulSoup(answer.body_html, 'html.parser')
         # Find all code blocks
 
-        code_blocks = soup.find_all('pre')
+        code_blocks = soup.find_all('code')
         # Apply syntax highlighting to each code block
         # print(code_blocks)
         for code_block in code_blocks:
