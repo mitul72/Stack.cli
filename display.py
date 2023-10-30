@@ -50,12 +50,10 @@ def display_answers(question: Question, answers: list[QuestionAnswer]):
 
         code_blocks = soup.find_all('code')
         # Apply syntax highlighting to each code block
-        # print(code_blocks)
         for code_block in code_blocks:
             code = code_block.get_text()
             guessLexer = guess_lexer(code)
             detected_lexer = guessLexer if guessLexer.name != "Text only" else PythonLexer()
-            # print(code)
             try:
                 highlighted_code = highlight(code, detected_lexer, Terminal256Formatter(style="monokai"))
                 code_block.replace_with(BeautifulSoup("\x1b[48;5;235m" + highlighted_code + "\x1b[0m", 'html.parser'))
