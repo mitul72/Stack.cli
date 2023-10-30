@@ -4,7 +4,7 @@ import sys
 from bs4 import BeautifulSoup
 from pygments import highlight
 from pygments.lexers import PythonLexer
-from pygments.formatters import TerminalFormatter
+from pygments.formatters import Terminal256Formatter
 from pynput.keyboard import Key, Listener
 
 from models import Question, QuestionAnswer
@@ -28,7 +28,7 @@ def choose_question_list(questions: list[Question]) -> Question:
         sys.exit()
 
     user_input = int(str(key).replace("'", ''))
-    question = questions[user_input-1]
+    question = questions[user_input]
     return question
 
 
@@ -48,16 +48,15 @@ def display_answers(question: Question, answers: list[QuestionAnswer]):
         soup = BeautifulSoup(answer.body_html, 'html.parser')
         # Find all code blocks
 
-        code_blocks = soup.find_all('code')
+        code_blocks = soup.find_all('pre')
         # Apply syntax highlighting to each code block
         # print(code_blocks)
-
         for code_block in code_blocks:
             code = code_block.get_text()
             # print(code)
             try:
-                highlighted_code = highlight(code, PythonLexer(), TerminalFormatter())
-                code_block.replace_with(BeautifulSoup(highlighted_code, 'html.parser'))
+                highlighted_code = highlight(code, PythonLexer(), Terminal256Formatter(style="monokai"))
+                code_block.replace_with(BeautifulSoup("\x1b[48;5;235m" + highlighted_code + "\x1b[0m", 'html.parser'))
             except Exception:
                 pass
         # Print or save the modified HTML content

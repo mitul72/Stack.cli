@@ -22,13 +22,19 @@ def get_question_answers(question: Question) -> list[QuestionAnswer]:
         # Assuming you have already fetched the post and have post['items']
         for item in post['items']:
             # Create a QuestionAnswer object and populate its attributes
+            if 'reputation' in item['owner']:
+                user_points = item['owner']['reputation']
+            else:
+                user_points = None
+
             question_answer = QuestionAnswer(
                 username=item['owner']['display_name'],
-                user_points=item['owner']['reputation'],
+                user_points=user_points,
                 up_votes=item['score'],
                 body_html=item['body'],
                 accepted=item['is_accepted']
             )
+
 
             # Append the QuestionAnswer object to the list
             question_answers.append(question_answer)
