@@ -2,10 +2,12 @@ import os
 import sys
 
 from bs4 import BeautifulSoup
-from pygments import highlight
+from rich.console import Console
+from rich.syntax import Syntax
 from pygments.lexers import guess_lexer, PythonLexer
-from pygments.formatters import Terminal256Formatter
 from pynput.keyboard import Key, Listener
+from itertools import zip_longest
+
 
 from models import Question, QuestionAnswer
 
@@ -25,6 +27,7 @@ def choose_question_list(questions: list[Question]) -> Question:
 
     key = _wait_for_keypress(*num_keys)
     if key == "'q'":
+        clear_screen()
         sys.exit()
 
     user_input = int(str(key).replace("'", ''))
@@ -48,20 +51,39 @@ def display_answers(question: Question, answers: list[QuestionAnswer]):
         soup = BeautifulSoup(answer.body_html, 'html.parser')
         # Find all code blocks
 
-        code_blocks = soup.find_all('code')
-        # Apply syntax highlighting to each code block
-        for code_block in code_blocks:
-            code = code_block.get_text()
-            guessLexer = guess_lexer(code)
-            detected_lexer = guessLexer if guessLexer.name != "Text only" else PythonLexer()
-            try:
-                highlighted_code = highlight(code, detected_lexer, Terminal256Formatter(style="monokai"))
-                code_block.replace_with(BeautifulSoup("\x1b[48;5;235m" + highlighted_code + "\x1b[0m", 'html.parser'))
-            except Exception:
-                pass
+        paragraphs = soup.find_all('p')
+        get_pre_code = soup.find_all("pre")
+        # # Apply syntax highlighting to each code block
+        for paragraph in paragraphs:
+            code_blocks = paragraph.find_all('code')
+            for code_block in code_blocks:
+
+                code = code_block.get_text()
+                # guessLexer = guess_lexer(code)
+                # detected_lexer = guessLexer if guessLexer.name != "Text only" else PythonLexer()
+                try:
+                    # highlighted_code = highlight(code, detected_lexer, Terminal256Formatter(style="monokai"))
+                    code_block.replace_with(BeautifulSoup("\x1b[48;5;235m" + code + "\x1b[0m", 'html.parser'))
+                except Exception:
+                    pass
         # Print or save the modified HTML content
-        modified_html = str(soup.get_text())
-        print(modified_html)
+        for code_block in get_pre_code:
+            code_block.replaceWith("This is a code block")
+
+        split = soup.get_text().split("This is a code block")
+        console = Console()
+        for text, code_block in zip_longest(split, get_pre_code):
+            print(text)
+            try:
+                guessLexer = guess_lexer(code_block.get_text())
+                detected_lexer = guessLexer if guessLexer.name != "Text only" else PythonLexer()
+                syntax = Syntax(code_block.get_text(), detected_lexer, theme="monokai", line_numbers=True)
+                console.print(syntax)
+            except:
+                ...
+
+        # modified_html = str(soup.get_text())
+        # print(modified_html)
 
         print('-'*5)
 
