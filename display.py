@@ -104,11 +104,12 @@ def display_answers(question: Question, answers: list[QuestionAnswer]):
 def _wait_for_keypress(*keys):
     pressed_key = [None]
     keyboard = Controller()
-    def on_press(key):
-        # Clear input
-        keyboard.press(Key.backspace)
-        keyboard.release(Key.backspace)
 
+    # Clear input
+    keyboard.press(Key.backspace)
+    keyboard.release(Key.backspace)
+
+    def on_press(key):
         if str(key) in keys:
             pressed_key[0] = str(key)
             return False
