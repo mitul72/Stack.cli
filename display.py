@@ -106,8 +106,8 @@ def _wait_for_keypress(*keys):
     keyboard = Controller()
     def on_press(key):
         # Clear input
-        keyboard.press(Key.backspace)
-        keyboard.release(Key.backspace)
+        # keyboard.press(Key.backspace)
+        # keyboard.release(Key.backspace)
 
         if str(key) in keys:
             pressed_key[0] = str(key)
